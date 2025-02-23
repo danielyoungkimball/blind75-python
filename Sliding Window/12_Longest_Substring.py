@@ -3,20 +3,25 @@
 
 class Solution:
     def lengthOfLongestSubstring(self, s):
-        def check(start, end):
-            chars = set()
-            for i in range(start, end + 1):
-                c = s[i]
-                if c in chars:
-                    return False
-                chars.add(c)
-            return True
+        """
+        Returns the length of the longest substring without repeating characters.
+        
+        :param s: Input string.
+        :return: Length of the longest substring without duplicates.
+        """
+        char_index = {}  # Dictionary to store the last index of each character.
+        max_length = 0
+        start = 0  # Left pointer of the current window.
 
-        n = len(s)
+        for i, char in enumerate(s):
+            # If the character is found in the current window,
+            # move the start pointer to one position after its last occurrence.
+            if char in char_index and char_index[char] >= start:
+                start = char_index[char] + 1
 
-        res = 0
-        for i in range(n):
-            for j in range(i, n):
-                if check(i, j):
-                    res = max(res, j - i + 1)
-        return res
+            # Update the last seen index of the character.
+            char_index[char] = i
+            # Update the maximum length found so far.
+            max_length = max(max_length, i - start + 1)
+        
+        return max_length
