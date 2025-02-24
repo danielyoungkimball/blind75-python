@@ -1,7 +1,7 @@
 # Longest Repeating Character Replacement - Leetcode 424
 # https://leetcode.com/problems/longest-repeating-character-replacement/
 
-class Solution(object):
+class Solution(object): 
     def characterReplacement(self, s, k):
         count = {}
         max_count = 0
