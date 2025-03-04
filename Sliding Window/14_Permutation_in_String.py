@@ -1,33 +1,42 @@
 # Permutation in String – 567
 # https://leetcode.com/problems/permutation-in-string/
 
-from collections import Counter
-
 class Solution(object):
     def checkInclusion(self, s1, s2):
         if len(s1) > len(s2):
-            return False  # If s1 is longer, it can't be a substring
+            return False
+            
+        # hashmap1 for s1 character counts
+        char_count_1 = {}
+        for char in s1:
+            char_count_1[char] = char_count_1.get(char, 0) + 1
+        
+        # hashmap2 for the sliding window in s2
+        char_count_2 = {}
+        for i in range(len(s1)):
+            char = s2[i]
+            char_count_2[char] = char_count_2.get(char, 0) + 1
 
-        s1_count = Counter(s1)
-        window_count = Counter(s2[:len(s1)])  # Initialize window
+        if char_count_1 == char_count_2:
+            return True
 
-        if s1_count == window_count:
-            return True  # First window matches
+        # sliding window over s2
+        for i in range(len(s2) - len(s1)):  
+            j = i + len(s1)
 
-        for i in range(len(s1), len(s2)):
-            start_char = s2[i - len(s1)]  # Character leaving the window
-            new_char = s2[i]  # New character entering the window
-
-            # Remove old character
-            window_count[start_char] -= 1
-            if window_count[start_char] == 0:
-                del window_count[start_char]  # Remove if count hits 0
+            char_to_rm = s2[i]  # Character leaving the window
+            char_to_add = s2[j]  # Character entering the window
 
             # Add new character
-            window_count[new_char] += 1
+            char_count_2[char_to_add] = char_count_2.get(char_to_add, 0) + 1
 
-            # Check if current window matches s1
-            if window_count == s1_count:
+            # Remove old character
+            char_count_2[char_to_rm] -= 1
+            if char_count_2[char_to_rm] == 0:
+                del char_count_2[char_to_rm]  # Only delete if count is 0
+
+            # Check if maps match
+            if char_count_1 == char_count_2:
                 return True
 
         return False
